@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saraswati Library - Student Profile</title>
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+/* ===== BACKGROUND ===== */
+body { 
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0; 
+    padding: 20px; 
+    min-height: 100vh;
+}
+
+/* ===== CONTAINER ===== */
+.container { 
+    max-width: 800px; 
+    margin: 40px auto; 
+    background: #fff; 
+    padding: 40px; 
+    border-radius: 15px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+}
+
+/* ===== HEADING ===== */
+h1 { 
+    color: #151515; 
+    text-align: center; 
+}
+
+/* ===== PROFILE INFO ===== */
+.profile-info { 
+    text-align: center; 
+    margin-bottom: 30px; 
+    background: #f8f9fa; 
+    padding: 25px; 
+    border-radius: 10px; 
+    border-left: 5px solid #667eea;
+}
+
+.profile-info img {
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:15px;
+    border:4px solid #667eea;
+}
+
+#studentName {
+    color: #667eea;
+    font-weight: bold;
+}
+
+#bookCount {
+    color: #764ba2;
+    font-weight: bold;
+}
+
+/* ===== TABLE ===== */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+}
+
+th { 
+    background: linear-gradient(135deg, #667eea, #764ba2); 
+    color: white; 
+    padding: 15px; 
+}
+
+td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+}
+
+/* ===== BUTTONS ===== */
+button { 
+    padding: 12px 25px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    color: white;
+}
+
+.request-btn { 
+    background: linear-gradient(135deg, #667eea, #764ba2); 
+}
+
+.logout-btn { 
+    background: #6c757d; 
+}
+
+.return-btn { 
+    background: #27ae60; 
+}
+
+/* ===== BUTTON GROUP ===== */
+.button-group {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+</style>
+<script src="/static/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<h1><i class="fas fa-user-graduate"></i> Student Profile</h1>
+
+<div class="profile-info">
+
+    <!-- PROFILE IMAGE WITH FIRST LETTER -->
+    <img id="profileImage" src="" alt="Profile Image">
+
+    <p><strong>Welcome, <span id="studentName">Student</span>!</strong></p>
+    <p>You have <span id="bookCount">0</span> issued book(s).</p>
+
+</div>
+
+<table id="issuedBooksTable">
+<thead>
+<tr>
+<th>Book Name</th>
+<th>Author</th>
+<th>Issue Date</th>
+<th>Due Date</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<div class="button-group">
+<button class="request-btn" onclick="goToBooks()">
+<i class="fas fa-book"></i> Request More Books
+</button>
+
+<button class="logout-btn" onclick="logout()">
+<i class="fas fa-sign-out-alt"></i> Logout
+</button>
+</div>
+
+</div>
+
+<script>
+
+/* ===== LOGIN CHECK ===== */
+if (localStorage.getItem("userLoggedIn") !== "true") {
+    alert("Please log in first!");
+    location = "/login";
+}
+
+// Get stored email
+let studentEmail = localStorage.getItem("userEmail") || "";
+
+/* ===== GENERATE DEFAULT PROFILE IMAGE WITH FIRST LETTER ===== */
+function generateDefaultImage(text) {
+    let canvas = document.createElement('canvas');
+    canvas.width = 200;
+    canvas.height = 200;
+    let ctx = canvas.getContext('2d');
+
+    let firstLetter = text.charAt(0).toUpperCase();
+    
+    if (!firstLetter || firstLetter === '') {
+        firstLetter = 'S';
+    }
+
+    let gradient = ctx.createLinearGradient(0, 0, 200, 200);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(100, 100, 100, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 80px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(firstLetter, 100, 100);
+
+    return canvas.toDataURL('image/png');
+}
+
+// Set profile image
+let defaultImage = generateDefaultImage(studentEmail);
+document.getElementById("profileImage").src = defaultImage;
+
+/* ===== FETCH PROFILE AND ISSUED BOOKS ===== */
+async function loadProfile() {
+    try {
+        // Get profile data
+        const profileResponse = await fetch(`${API_URL}/get_profile`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: studentEmail })
+        });
+        
+        const profileData = await profileResponse.json();
+        
+        if (profileData.success) {
+            document.getElementById("studentName").textContent = profileData.name;
+        }
+        
+        // Get issued books
+        const booksResponse = await fetch(`${API_URL}/get_issued_books`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: studentEmail })
+        });
+        
+        const booksData = await booksResponse.json();
+        
+        if (booksData.success) {
+            document.getElementById("bookCount").textContent = booksData.books.length;
+            
+            let tbody = document.querySelector("#issuedBooksTable tbody");
+            tbody.innerHTML = "";
+            
+            if (booksData.books.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;color:#999;'>No books issued yet!</td></tr>";
+                return;
+            }
+            
+            booksData.books.forEach(book => {
+                tbody.innerHTML += `
+                <tr>
+                    <td>${book.name}</td>
+                    <td>${book.author}</td>
+                    <td>${book.issue_date || "N/A"}</td>
+                    <td>${book.due_date || "-"}</td>
+                    <td>
+                        <button class="return-btn" onclick="returnBook(${book.id})">
+                            Return
+                        </button>
+                    </td>
+                </tr>`;
+            });
+        }
+        
+    } catch (error) {
+        console.error("Error loading profile:", error);
+    }
+}
+
+/* ===== RETURN BOOK ===== */
+async function returnBook(id) {
+    if (!confirm("Are you sure you want to return this book?")) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/return_book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                bookId: id,
+                email: studentEmail
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert("Book returned successfully!");
+            loadProfile();
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        alert("Error returning book!");
+    }
+}
+
+/* ===== NAVIGATION ===== */
+function goToBooks() {
+    location = "/book";
+}
+
+/* ===== LOGOUT ===== */
+/* ===== LOGOUT ===== */
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        // Clear ALL localStorage (this is the key fix!)
+        localStorage.clear();
+        
+        // Force hard reload
+        window.location.replace("/");
+    }
+}
+
+/* ===== LOAD DATA ===== */
+loadProfile();
+
+</script>
+</body>
+</html>

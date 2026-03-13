@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saraswati Library - Admin Dashboard</title>
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin:0;
+    padding:20px;
+    min-height: 100vh;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.container{max-width:1100px;
+    margin:20px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    animation: fadeIn 1s ease-in;
+}
+.logo{width:120px;margin-bottom:10px;}
+h2{text-align:center;border-bottom:2px solid #667eea;padding-bottom:10px;}
+.controls{background:#f9f9f9;padding:20px;border-radius:8px;margin-bottom:20px;border:1px solid #eee;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+input{padding:10px;width:200px;border-radius:5px;border:1px solid #ccc;}
+button{padding:8px 15px;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
+button.add{background:#667eea;color:#fff;}
+button.remove{background:#e74c3c;color:#fff;}
+button.issue{background:#27ae60;color:#fff;}
+button.return{background:#f39c12;color:#fff;}
+.table-wrapper{overflow-x:auto; max-height:400px;overflow-y:auto;border:1px solid #ddd;border-radius:8px;}
+table{width:100%;border-collapse:collapse;}
+th{background: linear-gradient(135deg, #667eea, #764ba2);color:white;padding:15px;}td{border-bottom:1px solid #eee;padding:12px;text-align:center;}
+.status-badge{padding:5px 10px;border-radius:20px;font-size:.8em;font-weight:bold;}
+.requested{background:#fff3cd;color:#856404;}
+.issued{background:#d4edda;color:#155724;}
+.available{background:#e2e3e5;color:#383d41;}
+</style>
+<script src="/static/js/config.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+<div style="text-align:center;margin-bottom:30px;">
+<img src="/static/images/logo.png" class="logo">
+<h2 style="color:#060606;text-align:center;margin-bottom:20px;">Admin Dashboard</h2>
+</div>
+
+<div class="controls">
+<button onclick="location.href='/add_book'" style="background:#27ae60;">➕ Add Book</button>
+<input type="text" id="adminSearch" placeholder="Search..." onkeyup="displayBooks()">
+</div>
+
+<div class="table-wrapper">
+<table id="booksTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Book Name</th>
+<th>Author</th>
+<th>Status</th>
+<th>Student Email Id</th>
+<th>Issue Date</th>
+<th>Due Date</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<br>
+<button onclick="logoutAdmin()" style="background:#ddd">Logout</button>
+
+</div>
+<script>
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+    alert("Access Denied! Admin only.");
+    location = "/admin";
+}
+let books = [];
+let displayedBooks = [];
+
+// Fetch books from backend
+async function fetchBooks() {
+    try {
+        const response = await fetch(`${API_URL}/books`);
+        books = await response.json();
+        displayedBooks = books; // Store all books
+        displayBooks();
+    } catch (error) {
+        console.error("Error fetching books:", error);
+    }
+}
+
+function displayBooks(){
+    const tbody = document.querySelector("#booksTable tbody");
+    const search = document.getElementById("adminSearch").value.toLowerCase();
+    tbody.innerHTML = "";
+
+    // Filter books based on search
+    const filtered = displayedBooks.filter(b => 
+        b.name.toLowerCase().includes(search) || 
+        b.author.toLowerCase().includes(search)
+    );
+
+    // Show ALL books (removed the 50 limit)
+    filtered.forEach((book) => {
+        let actions = "";
+
+        if(book.status === "Requested"){
+            actions += `<button class="issue" onclick="issueBook(${book.id})">Approve & Issue</button>`;
+        }
+
+        if(book.status === "Issued"){
+            actions += `<button class="return" onclick="returnBook(${book.id})">Mark Returned</button>`;
+        }
+
+        actions += `<button class="remove" onclick="deleteBook(${book.id})">Delete</button>`;
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${book.id}</td>
+            <td>${book.name}</td>
+            <td>${book.author}</td>
+            <td><span class="status-badge ${book.status.toLowerCase()}">${book.status}</span></td>
+            <td>${book.requested_by || "-"}</td>
+            <td>${book.issue_date || "-"}</td>
+            <td>${book.due_date || "-"}</td>     
+            <td>${actions}</td>
+        </tr>`;
+    });
+}
+
+async function issueBook(id){
+    try {
+        const response = await fetch(`${API_URL}/issue_book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ bookId: id })
+        });
+        
+        const data = await response.json();
+        if(data.success){
+            alert("Book issued successfully!");
+            fetchBooks();
+        } else {
+            alert(data.message);
+        }
+    } catch(error) {
+        alert("Error issuing book!");
+    }
+}
+
+async function returnBook(id){
+    try {
+        const response = await fetch(`${API_URL}/admin_return_book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ bookId: id })
+        });
+        
+        const data = await response.json();
+        if(data.success){
+            alert("Book returned successfully!");
+            fetchBooks();
+        } else {
+            alert(data.message);
+        }
+    } catch(error) {
+        alert("Error returning book!");
+    }
+}
+
+async function deleteBook(id){
+    if(confirm("Delete book?")){
+        try {
+            const response = await fetch(`${API_URL}/delete_book`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bookId: id })
+            });
+            
+            const data = await response.json();
+            if(data.success){
+                fetchBooks();
+            } else {
+                alert(data.message);
+            }
+        } catch(error) {
+            alert("Error deleting book!");
+        }
+    }
+}
+
+function logoutAdmin(){ 
+    localStorage.removeItem("adminLoggedIn");
+    window.location.href="/admin"; 
+}
+
+// Load books on page load
+fetchBooks();
+</script>
+</body>
+</html>

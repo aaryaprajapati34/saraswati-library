@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saraswati Library - Admin Login</title>
+
+<link rel="icon" href="/static/images/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.login-container{
+    background:#fff;
+    padding:40px;
+    width:380px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    text-align:center;
+}
+
+.logo{
+    width:130px;
+    margin-bottom:10px;
+}
+
+h2 {
+    color: #0e0e0f;
+    margin-bottom: 20px;
+}
+
+.input-box{
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.input-box input{
+    width: 100%;
+    padding: 10px 38px 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.input-box input:focus{
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+.eye{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#888;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #5560c1, #5c3d8a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.error{
+    color:red;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.home-btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:12px 25px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color:white;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:bold;
+    transition: all 0.3s;
+}
+
+.home-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <img src="/static/images/logo.png" class="logo">
+    <h2>Admin Login</h2>
+
+    <div id="error" class="error"></div>
+
+    <div class="input-box">
+        <input type="text" id="username" placeholder="Admin Username">
+    </div>
+
+    <div class="input-box">
+        <input type="password" id="password" placeholder="Password">
+        <i class="fa-solid fa-eye-slash eye" onclick="togglePass()"></i>
+    </div>
+
+    <button onclick="loginAdmin()">Login</button>
+
+    <!-- Back Button -->
+    <a href="/" class="home-btn">← Back to Home</a>
+
+</div>
+
+<script>
+
+// Default admin setup
+if(!localStorage.getItem("admin")){
+    localStorage.setItem("admin", JSON.stringify({
+        username:"admin",
+        password:"aaryamansi2905"
+    }));
+}
+
+function togglePass(){
+    const p = document.getElementById("password");
+    p.type = p.type === "password" ? "text" : "password";
+}
+
+function loginAdmin(){
+    const u = document.getElementById("username").value.trim().toLowerCase();
+    const p = document.getElementById("password").value.trim();
+    const error = document.getElementById("error");
+
+    const admin = JSON.parse(localStorage.getItem("admin"));
+
+    if(u === admin.username && p === admin.password){
+        localStorage.setItem("adminLoggedIn","true");
+        alert("Admin login successful");
+        window.location.href = "/admin_dashboard";
+    } else {
+        error.textContent = "Invalid admin credentials!";
+    }
+}
+
+</script>
+
+</body>
+</html>

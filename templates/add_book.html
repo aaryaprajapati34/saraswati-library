@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saraswati Library - Add Book</title>
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="/static/js/config.js"></script>
+<style>
+
+body{
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    min-height: 100vh;
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== HEADER ===== */
+header {
+    background: #fff;
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header img {
+    height: 80px;
+}
+
+.header-links {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+}
+
+.header-links a {
+    color: #764ba2;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px;
+    transition: all 0.3s;
+}
+
+.header-links a:hover {
+    color: #667eea;
+    transform: scale(1.05);
+}
+
+/* ===== CARD ===== */
+.container{
+    width: 90%;
+    max-width: 500px;
+    background: #fff;
+    margin: 40px auto;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+h2{
+    color: #667eea;
+    margin-bottom: 30px;
+}
+
+input{
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+input:focus{
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+button{
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.back-btn{
+    background: #6c757d;
+    margin-top: 10px;
+}
+
+.back-btn:hover{
+    background: #5a6268;
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+}
+
+#msg{
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <img src="/static/images/logo.png" alt="Logo">
+    <div class="header-links">
+    <a href="/">Home</a>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/admin">Logout</a>
+</div>
+</header>
+
+<!-- ADD BOOK CARD -->
+<div class="container">
+    <h2>➕ Add New Book</h2> 
+
+    <input type="text" id="bookName" placeholder="Book Name">
+    <input type="text" id="author" placeholder="Author Name">
+    <button onclick="addBook()">Add Book</button>
+
+
+    <p id="msg"></p>
+</div>
+
+<script>
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+    alert("Access Denied! Admin only.");
+    location = "/admin";
+}
+
+async function addBook(){
+    let name = document.getElementById("bookName").value.trim();
+    let author = document.getElementById("author").value.trim();
+    let msg = document.getElementById("msg");
+
+    if(name === "" || author === ""){
+        msg.innerText = "Please enter book name and author!";
+        msg.style.color = "red";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/add_book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: name,
+                author: author
+            })
+        });
+        
+        const data = await response.json();
+        if(data.success){
+            msg.innerText = "✅ Book added successfully!";
+            msg.style.color = "green";
+            document.getElementById("bookName").value = "";
+            document.getElementById("author").value = "";
+        } else {
+            msg.innerText = data.message;
+            msg.style.color = "red";
+        }
+    } catch(error) {
+        msg.innerText = "Error adding book!";
+        msg.style.color = "red";
+    }
+}
+</script>
+</body>
+</html>

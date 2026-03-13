@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saraswati Library - Member Login</title>
+<link rel="icon" href="/static/images/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    animation: fadeIn 1s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.login-container {
+    background: #fff;
+    padding: 45px;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    text-align: center;
+    border-left: 5px solid #667eea;
+}
+.logo {
+    width: 90px;
+    margin-bottom: 10px;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+input:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+.password-box {
+    position: relative;
+}
+.eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button:hover {
+    background: linear-gradient(135deg, #5560c1, #5a3d8a);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+.captcha-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+#captchaCanvas {
+    background: #f3f3f3;
+    border-radius: 6px;
+    border: 1px dashed #999;
+}
+.refresh-btn {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+}
+.refresh-btn:hover {
+    background: #5a6fe0;
+}
+#msg {
+    margin-top: 10px;
+}
+.register-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+.register-link a {
+    color: #6f82f3;
+    text-decoration: none;
+    font-weight: bold;
+}
+.register-link a:hover {
+    text-decoration: underline;
+}
+</style>
+<script src="/static/js/config.js"></script>
+</head>
+<body>
+<div class="login-container">
+    <img src="/static/images/logo.png" class="logo" style="width:150px;">
+    <h2>Member Login</h2>
+    <input type="text" id="loginUser" placeholder="Email or Member ID" autocomplete="username">
+    <div class="password-box">
+        <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password">
+        <i class="fa-solid fa-eye-slash eye" onclick="togglePass(this)"></i>
+    </div>
+    <div class="captcha-box">
+        <canvas id="captchaCanvas" width="160" height="50"></canvas>
+        <button type="button" class="refresh-btn" onclick="genCaptcha()">
+            <i class="fa-solid fa-rotate"></i>
+        </button>
+    </div>
+    <input type="text" id="capInput" placeholder="Enter Captcha">
+    <button onclick="login()">Login</button>
+    <p id="msg"></p>
+    <div class="register-link">
+        New user? <a href="/register">Register</a>
+    </div>
+</div>
+<script>
+let captcha = "";
+
+function genCaptcha() {
+    captcha = "";
+    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let canvas = document.getElementById("captchaCanvas");
+    let ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "#333";
+
+    for (let i = 0; i < 5; i++) {
+        let ch = chars[Math.floor(Math.random() * chars.length)];
+        captcha += ch;
+        ctx.fillText(ch, 20 + i * 28, 32);
+    }
+}
+genCaptcha();
+
+function togglePass(icon) {
+    let f = document.getElementById("loginPass");
+    f.type = f.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+}
+
+function login() {
+    let user = document.getElementById("loginUser").value.trim().toLowerCase();
+    let pass = document.getElementById("loginPass").value.trim();
+    let cap = document.getElementById("capInput").value.trim();
+    let msg = document.getElementById("msg");
+
+    if (cap !== captcha) {
+        msg.innerText = "Wrong captcha!";
+        msg.style.color = "red";
+        genCaptcha();
+        return;
+    }
+
+    fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: user,
+            password: pass
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            msg.style.color = "green";
+            msg.innerText = "Login successful!";
+            
+            // ✅ ADD THESE 3 LINES
+            localStorage.setItem("userLoggedIn", "true");
+            localStorage.setItem("userEmail", data.email);
+            localStorage.setItem("userName", data.user);
+            
+            // Keep old keys for backward compatibility
+            localStorage.setItem("studentLoggedIn", "true");
+            localStorage.setItem("currentStudent", user);
+            
+            setTimeout(() => location.href = "/student_profile", 800);
+        } else {
+            msg.style.color = "red";
+            msg.innerText = data.message;
+        }
+    })
+    .catch(() => {
+        msg.style.color = "red";
+        msg.innerText = "Backend not running!";
+    });
+}
+</script>
+</body>
+</html>

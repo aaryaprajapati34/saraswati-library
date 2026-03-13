@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saraswati Library - Rules & Regulations</title>
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<style>
+/* ===== FULL BACKGROUND IMAGE ===== */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-image: url("/static/images/library.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* ===== DARK OVERLAY FOR READABILITY ===== */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: -1;
+}
+
+/* ===== HEADER ===== */
+header {
+    background: #ffffff;
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ===== LOGO ===== */
+.logo-box {
+    display: flex;
+    align-items: center;
+}
+
+.logo-box img {
+    height: 120px;
+    width: auto;
+    margin-right: 15px;
+}
+
+.logo-box span {
+    font-size: 24px;
+    font-weight: bold;
+    color: #764ba2;
+}
+
+/* ===== MENU ===== */
+.menu-container {
+    position: relative;
+}
+
+.hamburger {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #764ba2;
+    border-radius: 3px;
+}
+
+/* ===== DROPDOWN ===== */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    min-width: 180px;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f9fa;
+    color: #667eea;
+}
+
+.show {
+    display: block;
+}
+
+/* ===== TOP NAV LINKS ===== */
+.top-links {
+    display: flex;
+    align-items: center;
+    gap: 45px;
+    margin-right: 30px;
+}
+
+.top-links a {
+    text-decoration: none !important;
+    color: #764ba2;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
+
+.top-links a:hover {
+    color: #667eea;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* ===== CONTENT ===== */
+.container {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    animation: fadeIn 1.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+/* ===== RULES SECTION ===== */
+.rules-box {
+    width: 85%;
+    max-width: 900px;
+    margin: 40px auto 60px auto;
+    background: rgba(255,255,255,0.95);
+    color: #333;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.rules-box h2 {
+    color: #764ba2;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 32px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+.rule-section {
+    margin-bottom: 25px;
+}
+
+.rule-section h3 {
+    color: #667eea;
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.rule-section h3::before {
+    content: "📜";
+    margin-right: 10px;
+}
+
+.rule-section ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.rule-section li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.rule-section li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #764ba2;
+    font-weight: bold;
+}
+
+.warning {
+    background-color: #fff3cd;
+    border-left: 5px solid #ffc107;
+    padding: 15px;
+    margin-top: 30px;
+    border-radius: 5px;
+}
+
+.warning h4 {
+    margin: 0 0 10px 0;
+    color: #856404;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: #ffffff;
+    color: #333;
+    text-align: center;
+    padding: 25px 10px;
+    margin-top: 60px;
+}
+
+.footer strong {
+    color: #764ba2;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .top-links {
+        display: none;
+    }
+    .hamburger {
+        display: flex;
+    }
+    .rules-box {
+        width: 90%;
+        padding: 20px;
+    }
+    .container h1 {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="/static/images/logo.png" alt="Saraswati Library Logo">
+    </div>
+    <div class="nav-right">
+        <!-- Top Links -->
+        <div class="top-links">
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+            <a href="/about">About Us</a>
+        </div>
+        <!-- Hamburger Menu -->
+        <div class="menu-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="dropdown-menu" id="navMenu">
+                <a href="/book"><i class="fas fa-book"></i> All Books</a>
+                <a href="/contact"><i class="fas fa-envelope"></i> Contact Us</a>
+                <a href="/student_profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="/admin"><i class="fas fa-user-shield"></i> Admin Login</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <h1>Library Rules & Regulations</h1>
+    <p>Please follow these guidelines to maintain a peaceful learning environment.</p>
+</div>
+
+<div class="rules-box">
+    <h2>General Guidelines</h2>
+
+    <div class="rule-section">
+        <h3>Membership</h3>
+        <ul>
+            <li>Only registered members are allowed to borrow books.</li>
+            <li>Members must carry their valid Library ID card while entering the library.</li>
+            <li>Loss of ID card must be reported immediately to the librarian.</li>
+        </ul>
+    </div>
+
+    <div class="rule-section">
+        <h3>Borrowing & Returning</h3>
+        <ul>
+            <li>Students can borrow up to <strong>2 books</strong> at a time.</li>
+            <li>Books must be returned within <strong>14 days</strong> from the date of issue.</li>
+            <li>Late return fines: ₹5 per day will be charged for overdue books.</li>
+            <li>Books can be renewed only if there is no demand from other members.</li>
+        </ul>
+    </div>
+
+    <div class="rule-section">
+        <h3>Behavior in Library</h3>
+        <ul>
+            <li>Maintain complete <strong>silence</strong> inside the library premises.</li>
+            <li>Mobile phones must be kept on silent mode or vibration mode.</li>
+            <li>Eating, drinking, or chewing gum is strictly prohibited.</li>
+            <li>Do not rearrange books on the shelves; leave them on the table after reading.</li>
+        </ul>
+    </div>
+
+    <div class="rule-section">
+        <h3>Care of Library Materials</h3>
+        <ul>
+            <li>Handle all books and journals with care.</li>
+            <li>Any damage or loss of library material must be replaced or paid for by the member.</li>
+            <li>Writing, underlining, or tearing pages from books is strictly forbidden.</li>
+        </ul>
+    </div>
+
+    <div class="warning">
+        <h4>⚠️ Important Notice</h4>
+        <p>Violation of any of the above rules may lead to suspension of library privileges. For any dispute, the decision of the Librarian will be final.</p>
+    </div>
+</div>
+
+<footer class="footer">
+    <p><strong>Contact Us</strong></p>
+    <p>📞 Phone: +91 98765 43210</p>
+    <p>✉️ Email: saraswatilibrary@gmail.com</p>
+    <p>© 2026 Saraswati Library. All Rights Reserved.</p>
+</footer>
+
+<script>
+function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.closest('.menu-container')) {
+        document.getElementById("navMenu").classList.remove("show");
+    }
+}
+
+// Check if logged in
+if (localStorage.getItem("studentLoggedIn") === "true") {
+    document.getElementById("profileLink").style.display = "block";
+} else {
+    document.getElementById("profileLink").style.display = "none";
+}
+</script>
+
+</body>
+</html>

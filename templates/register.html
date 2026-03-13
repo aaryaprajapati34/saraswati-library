@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Saraswati Library - Member Registration</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<style>
+/* [Your CSS remains the same – it's good!] */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    animation: fadeIn 1s ease-in;
+}
+@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+}
+.box {
+    background: #fff;
+    width: 480px;
+    padding: 45px;
+    margin: 80px auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    border-left: 5px solid #667eea;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+    box-sizing: border-box;
+}
+input:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+button:hover {
+    background: #5560c1;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+#msg {
+    text-align: center;
+    margin-top: 10px;
+}
+.pass-box {
+    position: relative;
+}
+.pass-box i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+.home-btn {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background: #eee;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+.home-btn:hover {
+    background: #ddd;
+}
+</style>
+<script src="/static/js/config.js"></script>
+</head>
+<body>
+<div class="box">
+    <div style="text-align:center; margin-bottom:20px;">
+<img src="/static/images/logo.png" alt="LibraryHub Logo" style="width:150px; height:auto;">    </div>
+    <h2 style="text-align:center; margin-bottom:20px;">Create Member Account</h2>
+    <input id="name" placeholder="Full Name" required>
+    <input id="email" placeholder="Email" required>
+    <input id="memberId" placeholder="Member ID" required>
+    <div class="pass-box">
+        <input type="password" id="pass" placeholder="Password" required>
+        <i class="fa-solid fa-eye-slash" onclick="toggle('pass', this)"></i>
+    </div>
+    <div class="pass-box">
+        <input type="password" id="cpass" placeholder="Confirm Password" required>
+        <i class="fa-solid fa-eye-slash" onclick="toggle('cpass', this)"></i>
+    </div>
+    <button onclick="register()">Register</button>
+    <p id="msg"></p>
+    <a href="/" class="home-btn"> Back to Home</a>
+</div>
+<script>
+function toggle(id, icon) {
+    let f = document.getElementById(id);
+    if (f.type === "password") {
+        f.type = "text";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    } else {
+        f.type = "password";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    }
+}
+
+function register() {
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim().toLowerCase();
+    let mid = document.getElementById("memberId").value.trim();
+    let pass = document.getElementById("pass").value;
+    let cpass = document.getElementById("cpass").value;
+    let msg = document.getElementById("msg");
+
+    if (!name || !email || !mid || !pass || !cpass) {
+        msg.innerText = "All fields required!";
+        msg.style.color = "red";
+        return;
+    }
+
+    if (pass !== cpass) {
+        msg.innerText = "Passwords do not match!";
+        msg.style.color = "red";
+        return;
+    }
+
+    // Fetch to backend instead of localStorage
+    fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            memberId: mid,
+            password: pass
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            msg.innerText = "Registration successful! Redirecting...";
+            msg.style.color = "green";
+            setTimeout(() => location.href = "/login", 1200);
+        } else {
+            msg.innerText = data.message;
+            msg.style.color = "red";
+        }
+    })
+    .catch(() => {
+        msg.innerText = "Backend not running!";
+        msg.style.color = "red";
+    });
+}
+</script>
+</body>
+</html>

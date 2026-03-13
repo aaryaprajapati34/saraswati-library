@@ -1,6 +1,6 @@
 const API_BASE_URL = {
     development: "http://127.0.0.1:5000",
-    production: "https://your-production-domain.com"
+    production: "https://saraswati-library.onrender.com"
 };
 
 const isProduction = window.location.hostname !== "127.0.0.1" && 

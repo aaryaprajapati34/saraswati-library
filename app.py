@@ -6,7 +6,7 @@ import logging
 import re
 import datetime
 import os
-from models import db, Book
+from models import db, User, Book
 from dotenv import load_dotenv
 load_dotenv()
 # Debug: Check if static folder exists
@@ -113,22 +113,30 @@ def register():
 def login():
     try:
         data = request.get_json()
-        username = data.get('username').lower()
+        if not data:
+            return jsonify({'success': False, 'message': 'Invalid request, JSON required'}), 400
+
+        username = data.get('username')
         password = data.get('password')
         
         if not all([username, password]):
             return jsonify({'success': False, 'message': 'All fields required'}), 400
-        
-        from models import User
-        
+
+        username = username.lower()
         user = User.query.filter((User.email == username) | (User.member_id == username)).first()
         
         if user and check_password_hash(user.password, password):
-            return jsonify({'success': True, 'message': 'Login successful', 'user': user.name, 'email': user.email})
-        
+            return jsonify({
+                'success': True,
+                'message': 'Login successful',
+                'user': user.name,
+                'email': user.email
+            })
+
         return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
-    
+
     except Exception as e:
+        print("Login Error:", e)  # Logs real error on Render
         return jsonify({'success': False, 'message': 'Login failed'}), 500
 
 @app.route('/logout', methods=['POST'])
@@ -211,9 +219,20 @@ def return_book():
 def get_books():
     try:
         books = Book.query.all()
-        return jsonify([{'id': b.id, 'name': b.name, 'author': b.author, 'status': b.status, 'holder': b.holder, 'requested_by': b.requested_by, 'issue_date': b.issue_date, 'due_date': b.due_date} for b in books])
+        books_list = [{
+            'id': b.id,
+            'name': b.name,
+            'author': b.author,
+            'status': b.status,
+            'holder': b.holder,
+            'requested_by': b.requested_by,
+            'issue_date': b.issue_date,
+            'due_date': b.due_date
+        } for b in books]
+        return jsonify(books_list)  # <-- always an array
     except Exception as e:
-        return jsonify({'success': False, 'message': 'Failed to fetch books'}), 500
+        print("Fetch Books Error:", e)  # log actual error
+        return jsonify([])  # <-- return empty array instead of object
 
 @app.route('/add_book', methods=['POST'])
 def add_book():

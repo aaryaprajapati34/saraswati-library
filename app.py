@@ -6,6 +6,7 @@ import logging
 import re
 import datetime
 import os
+from models import db, Book
 from dotenv import load_dotenv
 load_dotenv()
 # Debug: Check if static folder exists
@@ -834,7 +835,6 @@ def seed_books():
     for name, author in books_list:
         new_book = Book(name=name, author=author, status='Available')
         db.session.add(new_book)
-
     db.session.commit()
     logging.info(f"Added {len(books_list)} books to database")
 
@@ -842,5 +842,8 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         seed_books()
+
+    # Get the port from environment (Render provides it)
+    port = int(os.environ.get("PORT", 5000))  # fallback to 5000 locally
     debug_mode = os.getenv("FLASK_DEBUG") == "True"
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)

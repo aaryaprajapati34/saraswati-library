@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saraswati Library - Book</title>
-    <link rel="icon" type="image/png" href="/static/images/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saraswati Library - Book</title>
+<link rel="icon" type="image/png" href="/static/images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -23,61 +23,39 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-} 
 .header-container {
-    display: flex; align-items: center; justify-content: center; gap: 20px;
-    margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e0e6ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e6ed;
 }
-.header-container h2 {
-    margin: 0;
-    font-size: 28px;
-    color: #090909;
-}
+.header-container h2 { margin:0; font-size:28px; color:#090909; }
 .stats { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
-.stat-box {
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    border: 1px solid #667eea;
-    font-weight: bold;
-    min-width: 120px;
-    text-align: center;
-    color: #667eea;
-}
-.controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-input { padding: 12px; border-radius: 6px; border: 1px solid #ccc; outline: none; font-size: 16px; transition: 0.3s; }
-input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
-}       
-#studentName { width: 30%; border: 2px solid #667eea; }
-#searchBox { width: 50%; border: 2px solid #1a73e8; }
-.scroll-box { max-height: 500px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; }
-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; } 
-th {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    position: sticky;
-    top: 0;
-    padding: 15px;
-    z-index: 10;
-    text-align: center;
-}        
-td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; word-wrap: break-word; }
-.action-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
-button { width: 110px; padding: 8px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn-req { background: #667eea; color: white; }
-.btn-req:hover { background: #5560c1; transform: translateY(-2px); }
-.btn-ret { background: #e74c3c; color: white; }
-.btn-ret:hover { background: #c0392b; transform: translateY(-2px); }
-.status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-.available { background: #e8f5e9; color: #2e7d32; }
-.requested { background: #fff3cd; color: #856404; }
-.issued { background: #ffebee; color: #c62828; }
-.waiting-text { font-size: 11px; color: #777; font-style: italic; }
+.stat-box { padding:10px 20px; border-radius:8px; background:#f8f9fa; border:1px solid #667eea; font-weight:bold; min-width:120px; text-align:center; color:#667eea; }
+.controls { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+input { padding:12px; border-radius:6px; border:1px solid #ccc; outline:none; font-size:16px; transition:0.3s; }
+input:focus { border-color:#667eea; box-shadow:0 0 8px rgba(102,126,234,0.3); }
+#studentName { width:30%; border:2px solid #667eea; }
+#searchBox { width:50%; border:2px solid #1a73e8; }
+.scroll-box { max-height:500px; overflow-y:auto; border:1px solid #ddd; border-radius:8px; }
+table { width:100%; border-collapse:collapse; table-layout:fixed; background:white; } 
+th { background:linear-gradient(135deg, #667eea, #764ba2); color:white; position:sticky; top:0; padding:15px; z-index:10; text-align:center; }        
+td { border-bottom:1px solid #eee; padding:12px; text-align:center; word-wrap:break-word; }
+.action-cell { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; }
+button { width:110px; padding:8px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; }
+.btn-req { background:#667eea; color:white; }
+.btn-req:hover { background:#5560c1; transform:translateY(-2px); }
+.btn-ret { background:#e74c3c; color:white; }
+.btn-ret:hover { background:#c0392b; transform:translateY(-2px); }
+.status-pill { padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; text-transform:uppercase; cursor:help; }
+.available { background:#e8f5e9; color:#2e7d32; }
+.requested { background:#fff3cd; color:#856404; }
+.issued { background:#ffebee; color:#c62828; }
+.waiting-text { font-size:11px; color:#777; font-style:italic; }
+mark { background:yellow; }
 </style>
 <script src="/static/js/config.js"></script>
 </head>
@@ -119,7 +97,8 @@ button { width: 110px; padding: 8px; border: none; border-radius: 5px; cursor: p
 // Admin check
 const isAdmin = localStorage.getItem("adminLoggedIn") === "true";
 if (!isAdmin) {
-    document.querySelectorAll(".admin-col").forEach(col => col.style.display = "none");
+    document.querySelectorAll(".admin-col").forEach(el => el.style.display = "none");
+    document.querySelectorAll("th.admin-col").forEach(el => el.style.display = "none");
 }
 
 // Auto-fill student email
@@ -131,15 +110,11 @@ let books = [];
 // Fetch books
 async function fetchBooks() {
     try {
-        const response = await fetch(`${API_URL}/books`);
-        const data = await response.json();
+        const res = await fetch(`${API_URL}/books`);
+        const data = await res.json();
         books = Array.isArray(data) ? data : [];
         displayBooks();
-    } catch (error) {
-        console.error("Error fetching books:", error);
-        books = [];
-        displayBooks();
-    }
+    } catch (err) { console.error(err); books=[]; displayBooks(); }
 }
 
 // Display books
@@ -149,10 +124,9 @@ function displayBooks() {
     const tbody = document.querySelector("#booksTable tbody");
     tbody.innerHTML = "";
 
-    if (!books.length) {
-        tbody.innerHTML = `<tr><td colspan="6">No books available.</td></tr>`;
-        updateStats();
-        return;
+    if (!books.length) { 
+        tbody.innerHTML = `<tr><td colspan="6">No books available.</td></tr>`; 
+        updateStats(); return;
     }
 
     const filtered = books.filter(b => 
@@ -164,88 +138,86 @@ function displayBooks() {
         tbody.innerHTML = `<tr><td colspan="6">No books match your search.</td></tr>`;
     } else {
         filtered.forEach(book => {
-            const isMyBook = (book.holder && book.holder.toLowerCase() === student.toLowerCase());
-            let actionHTML = "";
+            const isMyBook = book.holder && book.holder.toLowerCase() === student.toLowerCase();
 
-            if (book.status === "Available") {
-                actionHTML = `<button class="btn-req" onclick="requestBook(${book.id})">Request</button>`;
-            } else if (book.status === "Requested") {
-                actionHTML = isMyBook ? `<span class="waiting-text">Waiting Approval...</span>` : `<span>-</span>`;
-            } else if (book.status === "Issued") {
-                actionHTML = isMyBook ? `<button class="btn-ret" onclick="returnBook(${book.id})">Return</button>` : `<span>-</span>`;
-            }
+            // Highlight search match
+            const bookName = search ? book.name.replace(new RegExp(search,'gi'), match => `<mark>${match}</mark>`) : book.name;
+            const authorName = search ? book.author.replace(new RegExp(search,'gi'), match => `<mark>${match}</mark>`) : book.author;
+
+            let actionHTML = "";
+            if (book.status === "Available") actionHTML = `<button class="btn-req" onclick="requestBook(${book.id}, this)">Request</button>`;
+            else if (book.status === "Requested") actionHTML = isMyBook ? `<span class="waiting-text">Waiting Approval...</span>` : `<span>-</span>`;
+            else if (book.status === "Issued") actionHTML = isMyBook ? `<button class="btn-ret" onclick="returnBook(${book.id}, this)">Return</button>` : `<span>-</span>`;
 
             const holderDisplay = isAdmin ? (book.holder || "-") : "-";
             const issueDateDisplay = isAdmin ? (book.issue_date || "N/A") : "-";
 
             tbody.insertRow().innerHTML = `
                 <td>${book.id || "-"}</td>
-                <td style="text-align:left"><strong>${book.name || "-"}</strong></td>
-                <td>${book.author || "-"}</td>
+                <td style="text-align:left"><strong>${bookName || "-"}</strong></td>
+                <td>${authorName || "-"}</td>
                 <td class="admin-col">${holderDisplay}</td>
                 <td class="admin-col">${issueDateDisplay}</td>
                 <td>
                     <div class="action-cell">
-                        <span class="status-pill ${book.status ? book.status.toLowerCase() : 'available'}">${book.status || "Available"}</span>
+                        <span class="status-pill ${book.status.toLowerCase()}" title="Book is ${book.status}">${book.status}</span>
                         ${actionHTML}
                     </div>
                 </td>
             `;
         });
     }
-
     updateStats();
 }
 
 // Update stats
 function updateStats() {
-    const total = books.length;
-    const avail = books.filter(b => b.status === "Available").length;
-    const reqs = books.filter(b => b.status === "Requested").length;
-    document.getElementById("totalCount").innerText = `Total: ${total}`;
-    document.getElementById("availCount").innerText = `Available: ${avail}`;
-    document.getElementById("reqCount").innerText = `Requests: ${reqs}`;
+    document.getElementById("totalCount").innerText = `Total: ${books.length}`;
+    document.getElementById("availCount").innerText = `Available: ${books.filter(b=>b.status==="Available").length}`;
+    document.getElementById("reqCount").innerText = `Requests: ${books.filter(b=>b.status==="Requested").length}`;
 }
 
 // Request book
-async function requestBook(id) {
+async function requestBook(id, btn) {
     const student = document.getElementById("studentName").value.trim();
     if (!student) { alert("Enter your email first!"); return; }
     if (localStorage.getItem("studentLoggedIn") !== "true") { alert("Login first!"); location.href="/login"; return; }
 
+    btn.disabled = true; btn.innerText="Processing...";
     try {
-        const response = await fetch(`${API_URL}/request_book`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ bookId: id, requestedBy: student.toLowerCase() })
+        const res = await fetch(`${API_URL}/request_book`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ bookId:id, requestedBy:student.toLowerCase() })
         });
-        const data = await response.json();
-        alert(data.success ? "Request sent!" : data.message || "Request failed!");
-        fetchBooks();
-    } catch (err) { console.error(err); alert("Network error."); }
+        const data = await res.json();
+        alert(data.success?"Request sent!":data.message || "Request failed!");
+    } catch(err){ console.error(err); alert("Network error."); }
+    fetchBooks();
 }
 
 // Return book
-async function returnBook(id) {
+async function returnBook(id, btn) {
     const student = document.getElementById("studentName").value.trim();
     if (!student) { alert("Enter your email first!"); return; }
-    if (localStorage.getItem("studentLoggedIn") !== "true") { alert("Login first!"); location.href="/login"; return; }
+    if (!confirm("Are you sure you want to return this book?")) return;
 
+    btn.disabled = true; btn.innerText="Processing...";
     try {
-        const response = await fetch(`${API_URL}/return_book`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ bookId: id, email: student.toLowerCase() })
+        const res = await fetch(`${API_URL}/return_book`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ bookId:id, email:student.toLowerCase() })
         });
-        const data = await response.json();
-        alert(data.success ? "Book returned!" : data.message || "Return failed!");
-        fetchBooks();
-    } catch (err) { console.error(err); alert("Network error."); }
+        const data = await res.json();
+        alert(data.success?"Book returned!":data.message || "Return failed!");
+    } catch(err){ console.error(err); alert("Network error."); }
+    fetchBooks();
 }
 
-// Load books and refresh every 5 sec
+// Load books and refresh
 fetchBooks();
-setInterval(fetchBooks, 5000);
+setInterval(fetchBooks,5000);
 </script>
 </body>
 </html>

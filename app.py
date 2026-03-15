@@ -9,18 +9,20 @@ import os
 from models import db, User, Book
 from dotenv import load_dotenv
 load_dotenv()
-# Debug: Check if static folder exists
-print(f"Static folder exists: {os.path.exists('static')}")
-print(f"Images folder exists: {os.path.exists('static/images')}")
+import dj_database_url
+from whitenoise import WhiteNoise
 # Setup logging (FIXED - added missing parenthesis)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 app.static_folder = 'static'
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = dj_database_url.config(
+    default=os.getenv('DATABASE_URL', 'sqlite:///users.db'),
+    conn_max_age=600
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
 # Import db from models
 from models import db, Book
 db.init_app(app)

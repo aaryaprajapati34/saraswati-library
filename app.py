@@ -10,21 +10,18 @@ from models import db, User, Book
 from dotenv import load_dotenv
 load_dotenv()
 import dj_database_url
-from whitenoise import WhiteNoise
+
 # Setup logging (FIXED - added missing parenthesis)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 app.static_folder = 'static'
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = dj_database_url.config(
-    default=os.getenv('DATABASE_URL', 'sqlite:///users.db'),
-    conn_max_age=600
-)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
+
 # Import db from models
-from models import db, Book
+
 db.init_app(app)
 CORS(app)
 def validate_email(email):
@@ -864,7 +861,6 @@ if __name__ == '__main__':
         db.create_all()
         seed_books()
 
-    # Get the port from environment (Render provides it)
-    port = int(os.environ.get("PORT", 5000))  # fallback to 5000 locally
+    port = int(os.environ.get("PORT", 5000))
     debug_mode = os.getenv("FLASK_DEBUG") == "True"
     app.run(host='0.0.0.0', port=port, debug=debug_mode)
